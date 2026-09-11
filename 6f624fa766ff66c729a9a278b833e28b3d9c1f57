@@ -1,0 +1,40 @@
+decorations/generate.py
+  s_c4b78c24fc9d60::t_b0d6db33e74f41 1-9,11-78,80-86,93-129,132-134,139-142
+decorations/requirements.txt
+  s_c4b78c24fc9d60::t_b0d6db33e74f41 1
+src/Assets/SpriteAsset.cs
+  s_c4b78c24fc9d60::t_b0d6db33e74f41 1-21,23-35,37-71
+src/Events/KeyLimitEventRegistry.cs
+  s_c4b78c24fc9d60::t_b0d6db33e74f41 1-188
+src/Gameplay/KeyLimitExceededAction.cs
+  s_c4b78c24fc9d60::t_b0d6db33e74f41 1-7
+src/Gameplay/KeyLimitRuntime.cs
+  s_c4b78c24fc9d60::t_b0d6db33e74f41 1-199
+src/Main.cs
+  s_c4b78c24fc9d60::t_b0d6db33e74f41 1-44
+src/Patches/EditorPatches.cs
+  s_c4b78c24fc9d60::t_b0d6db33e74f41 1-194
+src/Patches/GameplayPatches.cs
+  s_c4b78c24fc9d60::t_b0d6db33e74f41 1-47
+src/UI/KeyLimitPopup.cs
+  s_c4b78c24fc9d60::t_b0d6db33e74f41 1-153
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "base_commit_sha": "6f624fa766ff66c729a9a278b833e28b3d9c1f57",
+  "prompts": {},
+  "sessions": {
+    "s_c4b78c24fc9d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "retroactive-keylimiter-src-decorations-2026-09-12",
+        "model": "gpt-5"
+      },
+      "human_author": "unknown <lis131017@gmail.com>",
+      "custom_attributes": {
+        "attribution_type": "retroactive-user-declared",
+        "scope": "src and decorations source files"
+      }
+    }
+  }
+}
