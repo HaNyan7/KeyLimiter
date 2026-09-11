@@ -1,10 +1,10 @@
 # KeyLimiter [BETA]
 
 > ### ⚠️ 사용 전 주의사항
-> 이 모드는 현재 정식 출시 예정인 모드입니다. 사용 시 발생하는 문제의 책임은 본인에게 있습니다. AI의 비중이 높은 프로젝트입니다. (해결중)
+> 이 모드는 현재 정식 출시 예정인 모드입니다. 사용 시 발생하는 문제의 책임은 본인에게 있습니다. AI의 비중이 높은 프로젝트입니다. 정식 출시 전 AI의 의존도를 전부 걷어낼 예정입니다.
 
 > <div style="display: flex; height: 60px; align-items: center;">
-> <img src = "./docs/images/OAI_OpenAI-Blossom_white.png"/>
+> <img src = "./docs/images/openai-brand-logo.png"/>
 > <p style="font-size: 30px; margin-top: 12px">Built with Codex</p>
 > </div>
 
