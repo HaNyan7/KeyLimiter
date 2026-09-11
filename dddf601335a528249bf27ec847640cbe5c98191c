@@ -1,0 +1,26 @@
+decorations/generate.py
+  s_c4b78c24fc9d60::t_b01ee7ab449d45 10,79,87,128-133
+src/Assets/SpriteAsset.cs
+  s_c4b78c24fc9d60::t_b01ee7ab449d45 9,23,37,72-93
+src/UI/KeyLimitPopup.cs
+  s_c4b78c24fc9d60::t_b01ee7ab449d45 14,114
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "base_commit_sha": "dddf601335a528249bf27ec847640cbe5c98191c",
+  "prompts": {},
+  "sessions": {
+    "s_c4b78c24fc9d60": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "retroactive-keylimiter-src-decorations-2026-09-12",
+        "model": "gpt-5"
+      },
+      "human_author": "unknown <lis131017@gmail.com>",
+      "custom_attributes": {
+        "attribution_type": "retroactive-user-declared",
+        "scope": "src and decorations source files"
+      }
+    }
+  }
+}
