@@ -1,6 +1,15 @@
 # KeyLimiter [BETA]
 
-얼불춤(A Dance of Fire and Ice) 레벨 에디터에 **키 제한** 이벤트를 추가하는 Unity Mod Manager 모드입니다. 이벤트 이후 사용할 수 있는 서로 다른 입력 키의 수를 제한하고, 제한 수에 맞는 이미지를 표시합니다.
+> ### ⚠️ 사용 전 주의사항
+> 이 모드는 현재 정식 출시 예정인 모드입니다. 사용 시 발생하는 문제의 책임은 본인에게 있습니다. AI의 비중이 높은 프로젝트입니다. (해결중)
+
+> <div style="display: flex; height: 60px; align-items: center;">
+> <img src = "docs/images/OAI_OpenAI-Blossom_white.png"/>
+> <p style="font-size: 30px; margin-top: 12px">Built with Codex</p>
+> </div>
+
+
+얼불춤(A Dance of Fire and Ice) 레벨 에디터에 **키 제한** 이벤트를 추가하는 Unity Mod Manager 모드입니다. 이벤트 이후 사용할 수 있는 서로 다른 입력 키의 수를 제한합니다.
 
 ## 설치 및 사용
 
@@ -24,8 +33,6 @@
 
 제한 이벤트가 발동하면 `decorations/<제한 수>.png`를 표시합니다. 기본 배포 이미지는 `1.png`부터 `24.png`까지이며, `0` 또는 `25` 이상의 제한에는 이미지가 표시되지 않습니다.
 
-이미지는 원본 크기의 `70%`로 표시하며, 중심은 화면 가로 `50%`, 아래에서 세로 `25%` 지점에 위치합니다. `0.7초` 동안 표시한 뒤 `2.3초` 동안 서서히 사라지며, 새 이벤트가 발동하면 해당 이미지로 다시 시작합니다.
-
 설치된 모드 폴더의 `icon.png`를 바꾸면 에디터 이벤트 아이콘을, `decorations/1.png`~`24.png`를 바꾸면 각 제한 팝업을 변경할 수 있습니다. 이미지를 교체한 후에는 게임을 다시 시작해 캐시를 갱신합니다.
 
 ## 라이선스
@@ -33,5 +40,3 @@
 Copyright 2026 HaNyan.
 
 프로젝트의 자체 소스 코드와 문서는 [Apache License 2.0](LICENSE)에 따라 배포합니다. 라이선스 전문은 [Apache 공식 배포본](https://www.apache.org/licenses/LICENSE-2.0.txt)을 사용합니다.
-
-Pretendard 폰트에는 별도의 **SIL Open Font License 1.1**이 적용되며 Apache 2.0으로 변경하지 않습니다. [서드파티 안내](THIRD_PARTY_NOTICES.md)와 [폰트 라이선스 전문](decorations/assets/Pretendard-LICENSE.txt)을 확인하세요.
