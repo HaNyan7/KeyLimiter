@@ -1,0 +1,25 @@
+# Visual Studio / MSBuild
+.vs/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# JetBrains IDEs
+.idea/
+*.DotSettings.user
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Generated images and packages
+/decorations/build/
+/dist/
+
+# Local backups
+/backup/
