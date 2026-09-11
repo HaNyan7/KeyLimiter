@@ -11,6 +11,7 @@ internal static class KeyLimitPopup
 {
     private const float HoldDuration = 0.7f;
     private const float FadeDuration = 2.3f;
+    private const float ImageScale = 0.7f;
     private const int MaximumImageCount = 24;
 
     private static readonly Dictionary<int, SpriteAsset> images = [];
@@ -110,6 +111,7 @@ internal static class KeyLimitPopup
 
         popupImage.sprite = image.Sprite;
         popupImage.SetNativeSize();
+        popupImage.rectTransform.sizeDelta *= ImageScale;
         popupImage.color = Color.white;
         popupImage.transform.SetAsLastSibling();
         popupImage.gameObject.SetActive(true);

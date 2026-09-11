@@ -7,7 +7,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 TILE_SIZE = 100
-GAP = 25
+GAP = 15
 MAX_COLUMNS = 8
 DEFAULT_MAX_COUNT = 24
 TEXT_GAP = 25
@@ -76,7 +76,7 @@ def load_font() -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(FONT_PATH, TEXT_FONT_SIZE)
 
 
-def render(
+def render_image(
     count: int,
     fill: Image.Image,
     empty: Image.Image,
@@ -84,12 +84,7 @@ def render(
 ) -> Image.Image:
     rows = make_rows(count)
     label = f"{count}  KEY LIMIT"
-    label_bounds = ImageDraw.Draw(Image.new("L", (1, 1))).textbbox(
-        (0, 0),
-        label,
-        font=font,
-        stroke_width=TEXT_STROKE_WIDTH,
-    )
+    label_bounds = font.getbbox(label, stroke_width=TEXT_STROKE_WIDTH)
     label_width = label_bounds[2] - label_bounds[0]
     label_height = label_bounds[3] - label_bounds[1]
 
@@ -127,15 +122,15 @@ def generate(max_count: int) -> None:
     if max_count < 1:
         raise ValueError("--max-count must be at least 1")
 
-    fill = load_asset("fill.png")
-    empty = load_asset("empty.png")
     font = load_font()
     BUILD_DIR.mkdir(parents=True, exist_ok=True)
 
-    for count in range(1, max_count + 1):
-        output = BUILD_DIR / f"{count}.png"
-        render(count, fill, empty, font).save(output, optimize=True)
-        print(output.relative_to(ROOT))
+    with load_asset("fill.png") as fill, load_asset("empty.png") as empty:
+        for count in range(1, max_count + 1):
+            output = BUILD_DIR / f"{count}.png"
+            with render_image(count, fill, empty, font) as image:
+                image.save(output, optimize=True)
+            print(output.relative_to(ROOT))
 
 
 if __name__ == "__main__":

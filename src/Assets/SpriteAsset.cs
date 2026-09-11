@@ -6,6 +6,7 @@ namespace KeyLimiter.Assets;
 
 internal sealed class SpriteAsset : IDisposable
 {
+    private static readonly Func<Texture2D, byte[], bool, bool> LoadImage = CreateImageLoader();
     private readonly Texture2D texture;
 
     internal Sprite Sprite { get; }
@@ -19,7 +20,7 @@ internal sealed class SpriteAsset : IDisposable
     internal static bool TryLoad(string path, string name, out SpriteAsset asset)
     {
         asset = null;
-        if (!File.Exists(path))
+        if (LoadImage == null || !File.Exists(path))
             return false;
 
         Texture2D texture = null;
@@ -33,7 +34,7 @@ internal sealed class SpriteAsset : IDisposable
                 wrapMode = TextureWrapMode.Clamp
             };
 
-            if (!ImageConversion.LoadImage(texture, File.ReadAllBytes(path)))
+            if (!LoadImage(texture, File.ReadAllBytes(path), false))
             {
                 UnityEngine.Object.Destroy(texture);
                 return false;
@@ -67,5 +68,27 @@ internal sealed class SpriteAsset : IDisposable
             UnityEngine.Object.Destroy(Sprite);
         if (texture != null)
             UnityEngine.Object.Destroy(texture);
+    }
+
+    private static Func<Texture2D, byte[], bool, bool> CreateImageLoader()
+    {
+        // The game's image module targets netstandard 2.1, but UMM mods target .NET 4.8.
+        // Resolve once and cache a typed delegate instead of reflecting on every load.
+        try
+        {
+            var method = Type.GetType(
+                "UnityEngine.ImageConversion, UnityEngine.ImageConversionModule"
+            )?.GetMethod("LoadImage", [typeof(Texture2D), typeof(byte[]), typeof(bool)]);
+
+            return method == null
+                ? null
+                : (Func<Texture2D, byte[], bool, bool>)Delegate.CreateDelegate(
+                    typeof(Func<Texture2D, byte[], bool, bool>), method);
+        }
+        catch (Exception exception)
+        {
+            Debug.LogError($"[KeyLimiter] Image loader is unavailable: {exception}");
+            return null;
+        }
     }
 }
