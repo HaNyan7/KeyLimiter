@@ -3,10 +3,8 @@
 > ### ⚠️ 사용 전 주의사항
 > 이 모드는 현재 정식 출시 예정인 모드입니다. 사용 시 발생하는 문제의 책임은 본인에게 있습니다. AI의 비중이 높은 프로젝트입니다. 정식 출시 전 AI의 의존도를 전부 걷어낼 예정입니다.
 
-> <div style="display: flex; height: 60px; align-items: center;">
-> <img src = "./docs/images/openai-brand-logo.png"/>
-> <p style="font-size: 30px; margin-top: 12px">Built with Codex</p>
-> </div>
+> <img src="./docs/images/openai-brand-logo.png" width="60" align="middle">
+> <sub><big><big>Built with Codex</big></big></sub>
 
 
 얼불춤(A Dance of Fire and Ice) 레벨 에디터에 **키 제한** 이벤트를 추가하는 Unity Mod Manager 모드입니다. 이벤트 이후 사용할 수 있는 서로 다른 입력 키의 수를 제한합니다.
