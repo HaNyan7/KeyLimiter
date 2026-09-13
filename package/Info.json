@@ -2,7 +2,7 @@
     "Id": "KeyLimiter",
     "DisplayName": "KeyLimiter",
     "Author": "HaNyan",
-    "Version": "v1.0.0-beta.1",
+    "Version": "v1.0.0-beta.2",
     "AssemblyName": "KeyLimiter.dll",
     "EntryMethod": "KeyLimiter.Main.Load",
     "HomePage": "https://github.com/HaNyan7/KeyLimiter",
