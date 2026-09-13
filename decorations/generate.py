@@ -1,137 +1,164 @@
 from __future__ import annotations
 
 import argparse
+from math import ceil
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-
 TILE_SIZE = 100
-GAP = 15
+GAP_SIZE = 10
 MAX_COLUMNS = 8
-DEFAULT_MAX_COUNT = 24
+DEFAULT_MAX_COUNT = 100
 TEXT_GAP = 25
 TEXT_FONT_SIZE = 40
 TEXT_PADDING = 8
 TEXT_STROKE_WIDTH = 3
+NUMBER_FONT_WEIGHT = 600
+TEXT_FONT_WEIGHT = 700
 
 ROOT = Path(__file__).resolve().parent
 ASSETS_DIR = ROOT / "assets"
 BUILD_DIR = ROOT / "build"
-FONT_PATH = ASSETS_DIR / "Pretendard-SemiBold.ttf"
+FONT_PATH = ASSETS_DIR / "PretendardVariable.ttf"
 
 
-def parse_args() -> argparse.Namespace:
+def drawRaw(
+    raw_count: int,
+    fill: Image.Image,
+    empty: Image.Image,
+) -> Image.Image:
+    if not 1 <= raw_count <= MAX_COLUMNS:
+        raise ValueError(f"raw_count must be between 1 and {MAX_COLUMNS}")
+
+    tiles = [empty] if raw_count % 2 == 1 else []
+    tiles.extend([fill] * raw_count)
+
+    width = TILE_SIZE * len(tiles) + GAP_SIZE * (len(tiles) - 1)
+    canvas = Image.new("RGBA", (width, TILE_SIZE), (0, 0, 0, 0))
+
+    for index, tile in enumerate(tiles):
+        canvas.alpha_composite(tile, (index * (TILE_SIZE + GAP_SIZE), 0))
+
+    return canvas
+
+
+def drawImage(
+    count: int,
+    fill: Image.Image,
+    empty: Image.Image,
+) -> Image.Image:
+    if count < 1:
+        raise ValueError("count must be at least 1")
+
+    if fill.size != (TILE_SIZE, TILE_SIZE) or empty.size != (TILE_SIZE, TILE_SIZE):
+        raise ValueError(f"image must be {TILE_SIZE}x{TILE_SIZE}")
+
+    quotient, remainder = divmod(count, MAX_COLUMNS)
+    raws = [drawRaw(MAX_COLUMNS, fill, empty) for _ in range(quotient)]
+
+    if remainder:
+        raws.append(drawRaw(remainder, fill, empty))
+
+    try:
+        raws_width = max(raw.width for raw in raws)
+        raws_height = TILE_SIZE * len(raws) + GAP_SIZE * (len(raws) - 1)
+
+        if not FONT_PATH.is_file():
+            raise FileNotFoundError(f"Font is missing: {FONT_PATH}")
+
+        number_label = f"{count}  "
+        text_label = "KEY LIMIT"
+
+        number_font = ImageFont.truetype(FONT_PATH, TEXT_FONT_SIZE)
+        number_font.set_variation_by_axes([NUMBER_FONT_WEIGHT])
+        text_font = ImageFont.truetype(FONT_PATH, TEXT_FONT_SIZE)
+        text_font.set_variation_by_axes([TEXT_FONT_WEIGHT])
+
+        number_advance = number_font.getlength(number_label)
+        number_bounds = number_font.getbbox(number_label, anchor="ls", stroke_width=TEXT_STROKE_WIDTH)
+        text_bounds = text_font.getbbox(text_label, anchor="ls", stroke_width=TEXT_STROKE_WIDTH)
+
+        label_left = min(number_bounds[0], number_advance + text_bounds[0])
+        label_top = min(number_bounds[1], text_bounds[1])
+        label_right = max(number_bounds[2], number_advance + text_bounds[2])
+        label_bottom = max(number_bounds[3], text_bounds[3])
+        label_width = ceil(label_right - label_left)
+        label_height = ceil(label_bottom - label_top)
+
+        width = max(raws_width, label_width + TEXT_PADDING * 2)
+        height = raws_height + TEXT_GAP + label_height + TEXT_PADDING
+        canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+
+        for index, raw in enumerate(raws):
+            x = (width - raw.width) // 2
+            y = index * (TILE_SIZE + GAP_SIZE)
+            canvas.alpha_composite(raw, (x, y))
+
+        draw = ImageDraw.Draw(canvas)
+        label_x = (width - label_width) / 2 - label_left
+        label_y = raws_height + TEXT_GAP - label_top
+        text_options = {
+            "fill": (255, 255, 255, 255),
+            "stroke_width": TEXT_STROKE_WIDTH,
+            "stroke_fill": (0, 0, 0, 255),
+            "anchor": "ls",
+        }
+        draw.text(
+            (label_x, label_y),
+            number_label,
+            font=number_font,
+            **text_options,
+        )
+        draw.text(
+            (label_x + number_advance, label_y),
+            text_label,
+            font=text_font,
+            **text_options,
+        )
+
+        return canvas
+    finally:
+        for raw in raws:
+            raw.close()
+
+
+def generate(max_count: int) -> None:
+    if max_count < 1:
+        raise ValueError("max_count must be at least 1")
+
+    BUILD_DIR.mkdir(parents=True, exist_ok=True)
+
+    with Image.open(ASSETS_DIR / "fill.png") as fill_source, Image.open(
+        ASSETS_DIR / "empty.png"
+    ) as empty_source:
+        fill = fill_source.convert("RGBA")
+        empty = empty_source.convert("RGBA")
+
+        try:
+            expected_size = (TILE_SIZE, TILE_SIZE)
+            if fill.size != expected_size or empty.size != expected_size:
+                raise ValueError(
+                    f"fill.png and empty.png must both be {TILE_SIZE}x{TILE_SIZE}"
+                )
+
+            for count in range(1, max_count + 1):
+                output = BUILD_DIR / f"{count}.png"
+                with drawImage(count, fill, empty) as image:
+                    image.save(output, optimize=True)
+                print(output.relative_to(ROOT))
+        finally:
+            fill.close()
+            empty.close()
+
+
+if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Generate centered KeyLimiter count images."
+        description="Generate KeyLimiter tile images from 1 through max-count."
     )
     parser.add_argument(
         "--max-count",
         type=int,
         default=DEFAULT_MAX_COUNT,
-        help=f"largest image number to generate (default: {DEFAULT_MAX_COUNT})",
     )
-    return parser.parse_args()
-
-
-def load_asset(name: str) -> Image.Image:
-    path = ASSETS_DIR / name
-    with Image.open(path) as source:
-        image = source.convert("RGBA")
-
-    expected_size = (TILE_SIZE, TILE_SIZE)
-    if image.size != expected_size:
-        raise ValueError(
-            f"{path} must be {TILE_SIZE}x{TILE_SIZE}, got {image.size[0]}x{image.size[1]}"
-        )
-
-    return image
-
-
-def make_rows(count: int) -> list[list[bool]]:
-    """Return rows where True is fill and False is empty."""
-    if count < 1:
-        raise ValueError("count must be at least 1")
-
-    full_rows, remainder = divmod(count, MAX_COLUMNS)
-    rows = [[True] * MAX_COLUMNS for _ in range(full_rows)]
-
-    if remainder:
-        final_row = [True] * remainder
-        if remainder % 2 == 1:
-            final_row.insert(0, False)
-        rows.append(final_row)
-
-    return rows
-
-
-def sequence_size(length: int) -> int:
-    return length * TILE_SIZE + max(0, length - 1) * GAP
-
-
-def load_font() -> ImageFont.FreeTypeFont:
-    if not FONT_PATH.is_file():
-        raise FileNotFoundError(f"Pretendard font is missing: {FONT_PATH}")
-
-    return ImageFont.truetype(FONT_PATH, TEXT_FONT_SIZE)
-
-
-def render_image(
-    count: int,
-    fill: Image.Image,
-    empty: Image.Image,
-    font: ImageFont.FreeTypeFont,
-) -> Image.Image:
-    rows = make_rows(count)
-    label = f"{count}  KEY LIMIT"
-    label_bounds = font.getbbox(label, stroke_width=TEXT_STROKE_WIDTH)
-    label_width = label_bounds[2] - label_bounds[0]
-    label_height = label_bounds[3] - label_bounds[1]
-
-    tile_width = max(sequence_size(len(row)) for row in rows)
-    tile_height = sequence_size(len(rows))
-    width = max(tile_width, label_width + TEXT_PADDING * 2)
-    height = tile_height + TEXT_GAP + label_height + TEXT_PADDING
-    canvas = Image.new("RGBA", (width, height), (0, 0, 0, 0))
-
-    for row_index, row in enumerate(rows):
-        row_width = sequence_size(len(row))
-        start_x = (width - row_width) // 2
-        y = row_index * (TILE_SIZE + GAP)
-
-        for column_index, is_filled in enumerate(row):
-            x = start_x + column_index * (TILE_SIZE + GAP)
-            canvas.alpha_composite(fill if is_filled else empty, (x, y))
-
-    draw = ImageDraw.Draw(canvas)
-    label_x = (width - label_width) // 2 - label_bounds[0]
-    label_y = tile_height + TEXT_GAP - label_bounds[1]
-    draw.text(
-        (label_x, label_y),
-        label,
-        font=font,
-        fill=(255, 255, 255, 255),
-        stroke_width=TEXT_STROKE_WIDTH,
-        stroke_fill=(0, 0, 0, 255),
-    )
-
-    return canvas
-
-
-def generate(max_count: int) -> None:
-    if max_count < 1:
-        raise ValueError("--max-count must be at least 1")
-
-    font = load_font()
-    BUILD_DIR.mkdir(parents=True, exist_ok=True)
-
-    with load_asset("fill.png") as fill, load_asset("empty.png") as empty:
-        for count in range(1, max_count + 1):
-            output = BUILD_DIR / f"{count}.png"
-            with render_image(count, fill, empty, font) as image:
-                image.save(output, optimize=True)
-            print(output.relative_to(ROOT))
-
-
-if __name__ == "__main__":
-    generate(parse_args().max_count)
+    generate(parser.parse_args().max_count)

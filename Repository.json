@@ -3,7 +3,7 @@
         {
             "Id": "KeyLimiter",
             "Version": "1.0.0-beta.1",
-            "DownloadUrl": "https://github.com/HaNyan7/KeyLimiter/releases/download/v1.0.0-beta.1/KeyLimiter-1.0.0-beta.1.zip"
+            "DownloadUrl": "https://github.com/HaNyan7/KeyLimiter/releases/download/v1.0.x/KeyLimiter-v1.0.0-beta.1.zip"
         }
     ]
 }
