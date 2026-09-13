@@ -13,8 +13,7 @@ DEFAULT_MAX_COUNT = 100
 TEXT_GAP = 25
 TEXT_FONT_SIZE = 40
 TEXT_PADDING = 8
-TEXT_STROKE_WIDTH = 3
-NUMBER_FONT_WEIGHT = 600
+NUMBER_FONT_WEIGHT = 500
 TEXT_FONT_WEIGHT = 700
 
 ROOT = Path(__file__).resolve().parent
@@ -76,8 +75,8 @@ def drawImage(
         text_font.set_variation_by_axes([TEXT_FONT_WEIGHT])
 
         number_advance = number_font.getlength(number_label)
-        number_bounds = number_font.getbbox(number_label, anchor="ls", stroke_width=TEXT_STROKE_WIDTH)
-        text_bounds = text_font.getbbox(text_label, anchor="ls", stroke_width=TEXT_STROKE_WIDTH)
+        number_bounds = number_font.getbbox(number_label, anchor="ls")
+        text_bounds = text_font.getbbox(text_label, anchor="ls")
 
         label_left = min(number_bounds[0], number_advance + text_bounds[0])
         label_top = min(number_bounds[1], text_bounds[1])
@@ -100,8 +99,6 @@ def drawImage(
         label_y = raws_height + TEXT_GAP - label_top
         text_options = {
             "fill": (255, 255, 255, 255),
-            "stroke_width": TEXT_STROKE_WIDTH,
-            "stroke_fill": (0, 0, 0, 255),
             "anchor": "ls",
         }
         draw.text(
@@ -153,12 +150,9 @@ def generate(max_count: int) -> None:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Generate KeyLimiter tile images from 1 through max-count."
-    )
+    parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--max-count",
+        "count",
         type=int,
-        default=DEFAULT_MAX_COUNT,
     )
-    generate(parser.parse_args().max_count)
+    generate(parser.parse_args().count)

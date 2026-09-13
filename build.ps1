@@ -16,7 +16,7 @@ if (-not (Test-Path -LiteralPath (Join-Path $managedDirectory 'UnityModManager\U
     throw 'Install Unity Mod Manager in the specified game directory before building.'
 }
 
-& $PythonCommand (Join-Path $projectRoot 'decorations\generate.py')
+& $PythonCommand (Join-Path $projectRoot 'decorations\generate.py') 100
 if ($LASTEXITCODE -ne 0) {
     throw 'Image generation failed. Install decorations/requirements.txt and try again.'
 }
