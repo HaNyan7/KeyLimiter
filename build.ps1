@@ -29,8 +29,11 @@ try {
     $contentDirectory = Join-Path $stagingDirectory 'content'
     New-Item -ItemType Directory -Path $contentDirectory -Force | Out-Null
 
-    foreach ($name in @('Info.json', 'icon.png')) {
-        Copy-Item -LiteralPath (Join-Path $projectRoot "package\$name") -Destination $contentDirectory
+    Copy-Item -LiteralPath (Join-Path $projectRoot 'package\Info.json') -Destination $contentDirectory
+
+    $iconPath = Join-Path $projectRoot 'package\icon.png'
+    if (Test-Path -LiteralPath $iconPath) {
+        Copy-Item -LiteralPath $iconPath -Destination $contentDirectory
     }
     Copy-Item -LiteralPath (Join-Path $projectRoot "bin\$Configuration\KeyLimiter.dll") -Destination $contentDirectory
     foreach ($name in @('README.md', 'LICENSE')) {
