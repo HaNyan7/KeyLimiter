@@ -2,8 +2,7 @@
 param(
     [string]$GameDirectory = 'D:\SteamLibrary\steamapps\common\A Dance of Fire and Ice',
     [ValidateSet('Debug', 'Release')]
-    [string]$Configuration = 'Release',
-    [string]$PythonCommand = 'python'
+    [string]$Configuration = 'Release'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -14,11 +13,6 @@ if (-not (Test-Path -LiteralPath (Join-Path $managedDirectory 'Assembly-CSharp.d
 }
 if (-not (Test-Path -LiteralPath (Join-Path $managedDirectory 'UnityModManager\UnityModManager.dll'))) {
     throw 'Install Unity Mod Manager in the specified game directory before building.'
-}
-
-& $PythonCommand (Join-Path $projectRoot 'decorations\generate.py') 100
-if ($LASTEXITCODE -ne 0) {
-    throw 'Image generation failed. Install decorations/requirements.txt and try again.'
 }
 
 & dotnet build (Join-Path $projectRoot 'KeyLimiter.csproj') -c $Configuration "-p:GameDirectory=$GameDirectory"
@@ -33,21 +27,14 @@ New-Item -ItemType Directory -Path $stagingDirectory | Out-Null
 
 try {
     $contentDirectory = Join-Path $stagingDirectory 'content'
-    $imageDirectory = Join-Path $contentDirectory 'decorations'
-    $fontLicenseDirectory = Join-Path $imageDirectory 'assets'
-    New-Item -ItemType Directory -Path $fontLicenseDirectory -Force | Out-Null
+    New-Item -ItemType Directory -Path $contentDirectory -Force | Out-Null
 
     foreach ($name in @('Info.json', 'icon.png')) {
         Copy-Item -LiteralPath (Join-Path $projectRoot "package\$name") -Destination $contentDirectory
     }
     Copy-Item -LiteralPath (Join-Path $projectRoot "bin\$Configuration\KeyLimiter.dll") -Destination $contentDirectory
-    foreach ($name in @('README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md')) {
+    foreach ($name in @('README.md', 'LICENSE')) {
         Copy-Item -LiteralPath (Join-Path $projectRoot $name) -Destination $contentDirectory
-    }
-    Copy-Item -LiteralPath (Join-Path $projectRoot 'decorations\assets\Pretendard-LICENSE.txt') -Destination $fontLicenseDirectory
-
-    foreach ($count in 1..24) {
-        Copy-Item -LiteralPath (Join-Path $projectRoot "decorations\build\$count.png") -Destination $imageDirectory
     }
 
     # Build in a fresh directory so stale files never enter the archive.

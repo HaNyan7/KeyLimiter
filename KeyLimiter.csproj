@@ -50,6 +50,14 @@
       <HintPath>$(GameManagedDirectory)\UnityEngine.CoreModule.dll</HintPath>
       <Private>false</Private>
     </Reference>
+    <Reference Include="UnityEngine.IMGUIModule">
+      <HintPath>$(GameManagedDirectory)\UnityEngine.IMGUIModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule">
+      <HintPath>$(GameManagedDirectory)\UnityEngine.TextRenderingModule.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>$(GameManagedDirectory)\UnityEngine.UI.dll</HintPath>
       <Private>false</Private>
@@ -66,7 +74,13 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\**\*.cs" />
+    <Compile Include="src\Features\Hud\HudFeature.cs" />
+    <Compile Include="src\Features\KeyLimit\KeyLimitRuntime.cs" />
+    <Compile Include="src\Features\KeyLimit\Patches\GameplayPatches.cs" />
+    <Compile Include="src\Features\Types\KeyLimitExceededAction.cs" />
+    <Compile Include="src\Features\Settings\ModSettings.cs" />
+    <Compile Include="src\Features\Settings\ModSettingsFeature.cs" />
+    <Compile Include="src\Main.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -77,6 +91,9 @@
     <None Include="Repository.json" />
     <None Include="THIRD_PARTY_NOTICES.md" />
     <None Include="build.ps1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\Features\NewFolder1\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="ValidateGameDirectory" BeforeTargets="ResolveAssemblyReferences">

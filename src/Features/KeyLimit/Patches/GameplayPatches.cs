@@ -1,10 +1,11 @@
 using HarmonyLib;
-using KeyLimiter.Gameplay;
-using KeyLimiter.UI;
 
-namespace KeyLimiter.Patches;
+namespace KeyLimiter.Features.KeyLimit.Patches;
 
-[HarmonyPatch(typeof(scrPlayer), nameof(scrPlayer.CountValidKeysPressed))]
+[HarmonyPatch(
+    typeof(scrPlayer),
+    nameof(scrPlayer.CountValidKeysPressed)
+)]
 internal static class EnforceKeyLimitPatch
 {
     private static void Prefix(scrPlayer __instance)
@@ -12,19 +13,13 @@ internal static class EnforceKeyLimitPatch
         KeyLimitRuntime.PrepareInput(__instance);
     }
 
-    private static void Postfix(scrPlayer __instance, ref int __result)
+    private static void Postfix(
+        scrPlayer __instance,
+        ref int __result
+    )
     {
         if (!KeyLimitRuntime.CompleteInput(__instance))
             __result = 0;
-    }
-}
-
-[HarmonyPatch(typeof(scrController), "PlayerControl_Update")]
-internal static class UpdateKeyLimitPopupPatch
-{
-    private static void Postfix(scrController __instance)
-    {
-        KeyLimitPopup.Update(__instance);
     }
 }
 

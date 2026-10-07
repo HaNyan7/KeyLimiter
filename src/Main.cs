@@ -1,7 +1,7 @@
 using HarmonyLib;
-using KeyLimiter.Events;
-using KeyLimiter.Gameplay;
-using KeyLimiter.UI;
+using KeyLimiter.Features.Hud;
+using KeyLimiter.Features.KeyLimit;
+using KeyLimiter.Features.Settings;
 using System.Reflection;
 using UnityModManagerNet;
 
@@ -14,9 +14,12 @@ public static class Main
     public static bool Load(UnityModManager.ModEntry modEntry)
     {
         harmony = new Harmony(modEntry.Info.Id);
-        KeyLimitEventRegistry.SetModDirectory(modEntry.Path);
-        KeyLimitPopup.SetModDirectory(modEntry.Path);
+
+        ModSettingsFeature.Load(modEntry);
+
         modEntry.OnToggle = OnToggle;
+        modEntry.OnGUI = OnGUI;
+        modEntry.OnSaveGUI = OnSaveGUI;
 
         return true;
     }
@@ -29,16 +32,26 @@ public static class Main
         if (enabled)
         {
             harmony.PatchAll(Assembly.GetExecutingAssembly());
-            KeyLimitEventRegistry.Register();
+            KeyLimitRuntime.ResetAll();
+            HudFeature.Enable();
         }
         else
         {
-            KeyLimitPopup.Reset();
+            HudFeature.Disable();
             KeyLimitRuntime.ResetAll();
-            KeyLimitEventRegistry.Unregister();
             harmony.UnpatchAll(modEntry.Info.Id);
         }
 
         return true;
+    }
+
+    private static void OnGUI(UnityModManager.ModEntry modEntry)
+    {
+        ModSettingsFeature.Draw();
+    }
+
+    private static void OnSaveGUI(UnityModManager.ModEntry modEntry)
+    {
+        ModSettingsFeature.Save(modEntry);
     }
 }
