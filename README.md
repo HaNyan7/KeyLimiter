@@ -3,8 +3,6 @@
 > [!WARNING]
 > 이 모드는 현재 정식 출시 예정인 모드입니다. 사용 시 발생하는 문제의 책임은 본인에게 있습니다.
 
-얼불춤(A Dance of Fire and Ice) 플레이 중 간단한 HUD 텍스트를 표시하는 Unity Mod Manager 모드입니다.
-
 ## 라이선스
 
 Copyright 2026 HaNyan.
