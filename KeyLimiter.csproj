@@ -74,18 +74,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\Features\Hud\HudFeature.cs" />
-    <Compile Include="src\Features\KeyLimit\KeyLimitRuntime.cs" />
-    <Compile Include="src\Features\KeyLimit\Patches\GameplayPatches.cs" />
-    <Compile Include="src\Features\Types\KeyLimitExceededAction.cs" />
-    <Compile Include="src\Features\Settings\ModSettings.cs" />
-    <Compile Include="src\Features\Settings\ModSettingsFeature.cs" />
-    <Compile Include="src\Main.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Src\Features\Hud\HudFeature.cs" />
+    <Compile Include="Src\Features\KeyLimit\KeyLimitRuntime.cs" />
+    <Compile Include="Src\Features\KeyLimit\Patches\GameplayPatches.cs" />
+    <Compile Include="Src\Features\Types\KeyLimitExceededAction.cs" />
+    <Compile Include="Src\Features\Settings\ModSettings.cs" />
+    <Compile Include="Src\Features\Settings\ModSettingsFeature.cs" />
+    <Compile Include="Src\Main.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="package\Info.json" />
-    <None Include="package\icon.png" />
+    <None Include="Package\Info.json" />
+    <None Include="Package\icon.png" />
     <None Include="README.md" />
     <None Include="LICENSE" />
     <None Include="Repository.json" />

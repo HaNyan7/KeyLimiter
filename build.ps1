@@ -29,9 +29,9 @@ try {
     $contentDirectory = Join-Path $stagingDirectory 'content'
     New-Item -ItemType Directory -Path $contentDirectory -Force | Out-Null
 
-    Copy-Item -LiteralPath (Join-Path $projectRoot 'package\Info.json') -Destination $contentDirectory
+    Copy-Item -LiteralPath (Join-Path $projectRoot 'Package\Info.json') -Destination $contentDirectory
 
-    $iconPath = Join-Path $projectRoot 'package\icon.png'
+    $iconPath = Join-Path $projectRoot 'Package\icon.png'
     if (Test-Path -LiteralPath $iconPath) {
         Copy-Item -LiteralPath $iconPath -Destination $contentDirectory
     }
