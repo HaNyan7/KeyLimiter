@@ -15,7 +15,26 @@ if (-not (Test-Path -LiteralPath (Join-Path $managedDirectory 'UnityModManager\U
     throw 'Install Unity Mod Manager in the specified game directory before building.'
 }
 
-& dotnet build (Join-Path $projectRoot 'KeyLimiter.csproj') -c $Configuration "-p:GameDirectory=$GameDirectory"
+$vsWherePath = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\Installer\vswhere.exe'
+$msBuildPath = $null
+
+if (Test-Path -LiteralPath $vsWherePath) {
+    $msBuildPath = & $vsWherePath -latest -products * -requires Microsoft.Component.MSBuild -find 'MSBuild\**\Bin\MSBuild.exe' |
+        Select-Object -First 1
+}
+
+if (-not $msBuildPath) {
+    $msBuildCommand = Get-Command 'MSBuild.exe' -ErrorAction SilentlyContinue
+    if ($msBuildCommand) {
+        $msBuildPath = $msBuildCommand.Source
+    }
+}
+
+if (-not $msBuildPath) {
+    throw 'Visual Studio MSBuild was not found.'
+}
+
+& $msBuildPath (Join-Path $projectRoot 'KeyLimiter.csproj') /t:Build "/p:Configuration=$Configuration" "/p:GameDirectory=$GameDirectory"
 if ($LASTEXITCODE -ne 0) {
     throw 'The mod build failed. The existing package has not been replaced.'
 }
@@ -36,6 +55,12 @@ try {
         Copy-Item -LiteralPath $iconPath -Destination $contentDirectory
     }
     Copy-Item -LiteralPath (Join-Path $projectRoot "bin\$Configuration\KeyLimiter.dll") -Destination $contentDirectory
+
+    $koreanResources = Join-Path $projectRoot "bin\$Configuration\ko"
+    if (Test-Path -LiteralPath $koreanResources) {
+        Copy-Item -LiteralPath $koreanResources -Destination $contentDirectory -Recurse
+    }
+
     foreach ($name in @('README.md', 'LICENSE')) {
         Copy-Item -LiteralPath (Join-Path $projectRoot $name) -Destination $contentDirectory
     }

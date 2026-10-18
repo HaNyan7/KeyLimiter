@@ -1,7 +1,9 @@
+using KeyLimiter.Features.Localization;
 using KeyLimiter.Features.Settings;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using Strings = KeyLimiter.Localization.strings;
 
 namespace KeyLimiter.Features.KeyLimit;
 
@@ -19,7 +21,7 @@ internal static class KeyLimitRuntime
     private static ConditionalWeakTable<scrPlayer, PlayerState> playerStates =
         new();
 
-    internal static int RemainingKeyCount { get; private set; }
+    internal static int AvailableKeys { get; private set; }
 
     internal static void PrepareInput(scrPlayer player)
     {
@@ -37,7 +39,7 @@ internal static class KeyLimitRuntime
 
         var limit = Mathf.Max(
             0,
-            ModSettingsFeature.Settings.LimitCount
+            ModSettingsFeature.Settings.AvailableKeys
         );
 
         if (state.Limit != limit)
@@ -46,7 +48,7 @@ internal static class KeyLimitRuntime
             state.RegisteredKeys.Clear();
         }
 
-        RemainingKeyCount = Mathf.Max(
+        AvailableKeys = Mathf.Max(
             0,
             state.Limit - state.RegisteredKeys.Count
         );
@@ -97,22 +99,20 @@ internal static class KeyLimitRuntime
         if (state.RegisteredKeys.Count + state.NewKeys.Count <= state.Limit)
         {
             state.RegisteredKeys.UnionWith(state.NewKeys);
-            RemainingKeyCount = Mathf.Max(
+            AvailableKeys = Mathf.Max(
                 0,
                 state.Limit - state.RegisteredKeys.Count
             );
             return true;
         }
 
-        if (ModSettingsFeature.Settings.ExeededAction
+        if (ModSettingsFeature.Settings.ExceededAction
             == KeyLimitExceededAction.Die)
         {
             player.Die(
                 false,
                 false,
-                RDString.language == SystemLanguage.Korean
-                    ? "키 제한을 초과했습니다."
-                    : "Key limit exceeded.",
+                LocalizationFeature.Get(nameof(Strings.ModGameOver)),
                 false
             );
         }
@@ -125,18 +125,18 @@ internal static class KeyLimitRuntime
         if (player != null)
             playerStates.Remove(player);
 
-        RemainingKeyCount = Mathf.Max(
+        AvailableKeys = Mathf.Max(
             0,
-            ModSettingsFeature.Settings.LimitCount
+            ModSettingsFeature.Settings.AvailableKeys
         );
     }
 
     internal static void ResetAll()
     {
         playerStates = new ConditionalWeakTable<scrPlayer, PlayerState>();
-        RemainingKeyCount = Mathf.Max(
+        AvailableKeys = Mathf.Max(
             0,
-            ModSettingsFeature.Settings.LimitCount
+            ModSettingsFeature.Settings.AvailableKeys
         );
     }
 

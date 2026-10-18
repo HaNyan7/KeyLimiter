@@ -74,21 +74,31 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Src\Features\Hud\HudFeature.cs" />
+    <Compile Include="Localization\strings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>strings.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Src\Features\KeyCounter\KeyCounterFeature.cs" />
     <Compile Include="Src\Features\KeyLimit\KeyLimitRuntime.cs" />
     <Compile Include="Src\Features\KeyLimit\Patches\GameplayPatches.cs" />
+    <Compile Include="Src\Features\Localization\LocalizationFeature.cs" />
     <Compile Include="Src\Features\Types\KeyLimitExceededAction.cs" />
     <Compile Include="Src\Features\Settings\ModSettings.cs" />
     <Compile Include="Src\Features\Settings\ModSettingsFeature.cs" />
     <Compile Include="Src\Main.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Localization\strings.ko.resx" />
+    <EmbeddedResource Include="Localization\strings.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>strings.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="Package\Info.json" />
     <None Include="Package\icon.png" />
     <None Include="README.md" />
     <None Include="LICENSE" />
     <None Include="Repository.json" />
-    <None Include="THIRD_PARTY_NOTICES.md" />
     <None Include="build.ps1" />
   </ItemGroup>
   <ItemGroup />

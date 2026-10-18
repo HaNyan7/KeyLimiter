@@ -1,11 +1,13 @@
+using KeyLimiter.Features.Localization;
 using UnityEngine;
 using UnityModManagerNet;
+using Strings = KeyLimiter.Localization.strings;
 
 namespace KeyLimiter.Features.Settings;
 
 internal static class ModSettingsFeature
 {
-    private static string limitCountInput = string.Empty;
+    private static string availableKeysInput = string.Empty;
 
     internal static ModSettings Settings { get; private set; } = new();
 
@@ -14,37 +16,14 @@ internal static class ModSettingsFeature
         Settings = UnityModManager.ModSettings.Load<ModSettings>(modEntry)
             ?? new ModSettings();
 
-        limitCountInput = Settings.LimitCount.ToString();
+        availableKeysInput = Settings.AvailableKeys.ToString();
     }
 
     internal static void Draw()
     {
-        var localizedText = RDString.language switch
-        {
-            SystemLanguage.Korean => new
-            {
-                Enable = "키 제한",
-                LimitCount = "키 제한 수",
-                ExceededAction = "초과 시 액션",
-                Die = "사망",
-                Ignore = "입력 무시",
-                ShowHud = "HUD 표시"
-            },
-
-            _ => new
-            {
-                Enable = "Key Limiter",
-                LimitCount = "Key Limit Count",
-                ExceededAction = "On Limit Exceeded",
-                Die = "Die",
-                Ignore = "Ignore Input",
-                ShowHud = "Show HUD"
-            }
-        };
-
         Settings.Enable = GUILayout.Toggle(
             Settings.Enable,
-            localizedText.Enable
+            LocalizationFeature.Get(nameof(Strings.SettingsEnable))
         );
 
         if (Settings.Enable)
@@ -53,17 +32,17 @@ internal static class ModSettingsFeature
             GUILayout.Space(24f);
             GUILayout.BeginVertical();
 
-            // 제한 수 시작
+            // 사용 가능한 키 시작
             GUILayout.BeginHorizontal();
 
             GUILayout.Label(
-                $"{localizedText.LimitCount}: ",
+                $"{LocalizationFeature.Get(nameof(Strings.SettingsAvailableKeys))}: ",
                 GUILayout.ExpandWidth(false)
             );
 
             var sliderValue = Mathf.RoundToInt(
                 GUILayout.HorizontalSlider(
-                    Settings.LimitCount,
+                    Settings.AvailableKeys,
                     1f,
                     40f,
                     GUILayout.Width(250f)
@@ -71,48 +50,48 @@ internal static class ModSettingsFeature
             );
 
             var inputValue = GUILayout.TextField(
-                limitCountInput,
+                availableKeysInput,
                 GUILayout.Width(50f)
             );
 
-            if (sliderValue != Settings.LimitCount)
+            if (sliderValue != Settings.AvailableKeys)
             {
-                Settings.LimitCount = sliderValue;
-                limitCountInput = sliderValue.ToString();
+                Settings.AvailableKeys = sliderValue;
+                availableKeysInput = sliderValue.ToString();
             }
-            else if (inputValue != limitCountInput)
+            else if (inputValue != availableKeysInput)
             {
-                limitCountInput = inputValue;
+                availableKeysInput = inputValue;
 
                 // 값 보정
                 if (int.TryParse(inputValue, out var parsedValue))
                 {
-                    Settings.LimitCount = Mathf.Clamp(parsedValue, 1, 40);
+                    Settings.AvailableKeys = Mathf.Clamp(parsedValue, 1, 40);
 
-                    if (parsedValue != Settings.LimitCount)
+                    if (parsedValue != Settings.AvailableKeys)
                     {
-                        limitCountInput = Settings.LimitCount.ToString();
+                        availableKeysInput = Settings.AvailableKeys.ToString();
                     }
                 }
             }
 
             GUILayout.EndHorizontal();
-            // 제한 수 끝
+            // 사용 가능한 키 끝
 
             // 액션 시작
             GUILayout.BeginHorizontal();
 
             GUILayout.Label(
-                localizedText.ExceededAction,
+                LocalizationFeature.Get(nameof(Strings.SettingsExceededAction)),
                 GUILayout.ExpandWidth(false)
             );
 
-            Settings.ExeededAction =
+            Settings.ExceededAction =
                 (KeyLimitExceededAction)GUILayout.Toolbar(
-                    (int)Settings.ExeededAction,
+                    (int)Settings.ExceededAction,
                     [
-                        localizedText.Die,
-                        localizedText.Ignore
+                        LocalizationFeature.Get(nameof(Strings.ExceededActionDie)),
+                        LocalizationFeature.Get(nameof(Strings.ExceededActionIgnore))
                     ],
                     GUILayout.ExpandWidth(false)
                 );
@@ -125,11 +104,6 @@ internal static class ModSettingsFeature
 
             GUILayout.Space(12f);
         }
-
-        Settings.ShowHud = GUILayout.Toggle(
-            Settings.ShowHud,
-            localizedText.ShowHud
-        );
     }
 
     internal static void Save(UnityModManager.ModEntry modEntry)

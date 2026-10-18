@@ -1,5 +1,5 @@
 using HarmonyLib;
-using KeyLimiter.Features.Hud;
+using KeyLimiter.Features.Display;
 using KeyLimiter.Features.KeyLimit;
 using KeyLimiter.Features.Settings;
 using System.Reflection;
@@ -33,11 +33,11 @@ public static class Main
         {
             harmony.PatchAll(Assembly.GetExecutingAssembly());
             KeyLimitRuntime.ResetAll();
-            HudFeature.Enable();
+            DisplayFeature.Enable();
         }
         else
         {
-            HudFeature.Disable();
+            DisplayFeature.Disable();
             KeyLimitRuntime.ResetAll();
             harmony.UnpatchAll(modEntry.Info.Id);
         }
