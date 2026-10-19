@@ -1,31 +1,24 @@
-using KeyLimiter.Features.Localization;
-using KeyLimiter.Features.Settings;
+using KeyLimiter.Localization;
+using KeyLimiter.Settings;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using UnityEngine;
 using Strings = KeyLimiter.Localization.strings;
 
-namespace KeyLimiter.Features.KeyLimit;
+namespace KeyLimiter.KeyLimit;
 
 internal static class KeyLimitRuntime
 {
     private sealed class PlayerState
     {
         internal readonly Dictionary<object, int> PreviousKeyFrequencies = [];
-        internal readonly HashSet<object> RegisteredKeys = [];
-        internal readonly HashSet<object> NewKeys = [];
-
-        internal int Limit = int.MinValue;
     }
 
     private static ConditionalWeakTable<scrPlayer, PlayerState> playerStates =
         new();
 
-    internal static int AvailableKeys { get; private set; }
-
     internal static void PrepareInput(scrPlayer player)
     {
-        if (!ModSettingsFeature.Settings.Enable
+        if (!ModSettingsController.Settings.Enable
             || player == null
             || !player.alive)
         {
@@ -37,21 +30,7 @@ internal static class KeyLimitRuntime
             CreatePlayerState
         );
 
-        var limit = Mathf.Max(
-            0,
-            ModSettingsFeature.Settings.AvailableKeys
-        );
-
-        if (state.Limit != limit)
-        {
-            state.Limit = limit;
-            state.RegisteredKeys.Clear();
-        }
-
-        AvailableKeys = Mathf.Max(
-            0,
-            state.Limit - state.RegisteredKeys.Count
-        );
+        KeyState.ClearKey();
 
         state.PreviousKeyFrequencies.Clear();
 
@@ -63,7 +42,7 @@ internal static class KeyLimitRuntime
 
     internal static bool CompleteInput(scrPlayer player)
     {
-        if (!ModSettingsFeature.Settings.Enable)
+        if (!ModSettingsController.Settings.Enable)
         {
             Reset(player);
             return true;
@@ -77,10 +56,8 @@ internal static class KeyLimitRuntime
             CreatePlayerState
         );
 
-        if (state.Limit <= 0)
+        if (KeyState.Limit <= 0)
             return true;
-
-        state.NewKeys.Clear();
 
         foreach (var pair in player.keyFrequency)
         {
@@ -89,30 +66,23 @@ internal static class KeyLimitRuntime
                 out var previousCount
             );
 
-            if (pair.Value > previousCount
-                && !state.RegisteredKeys.Contains(pair.Key))
-            {
-                state.NewKeys.Add(pair.Key);
-            }
+            if (pair.Value > previousCount)
+                KeyState.RegisterKey(pair.Key);
         }
 
-        if (state.RegisteredKeys.Count + state.NewKeys.Count <= state.Limit)
+        if (KeyState.CanCommit())
         {
-            state.RegisteredKeys.UnionWith(state.NewKeys);
-            AvailableKeys = Mathf.Max(
-                0,
-                state.Limit - state.RegisteredKeys.Count
-            );
+            KeyState.Commit();
             return true;
         }
 
-        if (ModSettingsFeature.Settings.ExceededAction
+        if (ModSettingsController.Settings.ExceededAction
             == KeyLimitExceededAction.Die)
         {
             player.Die(
                 false,
                 false,
-                LocalizationFeature.Get(nameof(Strings.ModGameOver)),
+                Localizer.Get(nameof(Strings.ModGameOver)),
                 false
             );
         }
@@ -125,18 +95,16 @@ internal static class KeyLimitRuntime
         if (player != null)
             playerStates.Remove(player);
 
-        AvailableKeys = Mathf.Max(
-            0,
-            ModSettingsFeature.Settings.AvailableKeys
+        KeyState.Reset(
+            ModSettingsController.Settings.AvailableKeys
         );
     }
 
     internal static void ResetAll()
     {
         playerStates = new ConditionalWeakTable<scrPlayer, PlayerState>();
-        AvailableKeys = Mathf.Max(
-            0,
-            ModSettingsFeature.Settings.AvailableKeys
+        KeyState.Reset(
+            ModSettingsController.Settings.AvailableKeys
         );
     }
 

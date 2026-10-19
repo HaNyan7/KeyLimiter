@@ -1,4 +1,4 @@
-namespace KeyLimiter.Features.Settings;
+namespace KeyLimiter.KeyLimit;
 
 public enum KeyLimitExceededAction
 {

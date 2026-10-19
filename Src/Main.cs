@@ -1,7 +1,7 @@
 using HarmonyLib;
-using KeyLimiter.Features.Display;
-using KeyLimiter.Features.KeyLimit;
-using KeyLimiter.Features.Settings;
+using KeyLimiter.Display;
+using KeyLimiter.KeyLimit;
+using KeyLimiter.Settings;
 using System.Reflection;
 using UnityModManagerNet;
 
@@ -15,7 +15,7 @@ public static class Main
     {
         harmony = new Harmony(modEntry.Info.Id);
 
-        ModSettingsFeature.Load(modEntry);
+        ModSettingsController.Load(modEntry);
 
         modEntry.OnToggle = OnToggle;
         modEntry.OnGUI = OnGUI;
@@ -33,11 +33,15 @@ public static class Main
         {
             harmony.PatchAll(Assembly.GetExecutingAssembly());
             KeyLimitRuntime.ResetAll();
-            DisplayFeature.Enable();
+            DisplayController.Create();
+            DisplayController.SetVisible(
+                ModSettingsController.Settings.Enable
+                && scnGame.instance != null
+            );
         }
         else
         {
-            DisplayFeature.Disable();
+            DisplayController.Destroy();
             KeyLimitRuntime.ResetAll();
             harmony.UnpatchAll(modEntry.Info.Id);
         }
@@ -47,11 +51,18 @@ public static class Main
 
     private static void OnGUI(UnityModManager.ModEntry modEntry)
     {
-        ModSettingsFeature.Draw();
+        if (!ModSettingsController.Draw())
+            return;
+
+        KeyLimitRuntime.ResetAll();
+        DisplayController.SetVisible(
+            ModSettingsController.Settings.Enable
+            && scnGame.instance != null
+        );
     }
 
     private static void OnSaveGUI(UnityModManager.ModEntry modEntry)
     {
-        ModSettingsFeature.Save(modEntry);
+        ModSettingsController.Save(modEntry);
     }
 }

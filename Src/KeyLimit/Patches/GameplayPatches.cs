@@ -1,6 +1,8 @@
 using HarmonyLib;
+using KeyLimiter.Display;
+using KeyLimiter.Settings;
 
-namespace KeyLimiter.Features.KeyLimit.Patches;
+namespace KeyLimiter.KeyLimit.Patches;
 
 [HarmonyPatch(
     typeof(scrPlayer),
@@ -38,5 +40,26 @@ internal static class ResetKeyLimitOnRewindPatch
     private static void Postfix(scrPlayer __instance)
     {
         KeyLimitRuntime.Reset(__instance);
+    }
+}
+
+[HarmonyPatch(typeof(scnGame), "Awake")]
+internal static class ShowDisplayOnGameStartPatch
+{
+    private static void Postfix()
+    {
+        DisplayController.SetVisible(
+            ModSettingsController.Settings.Enable
+        );
+    }
+}
+
+[HarmonyPatch(typeof(scnGame), "OnDestroy")]
+internal static class HideDisplayOnGameEndPatch
+{
+    private static void Prefix()
+    {
+        DisplayController.SetVisible(false);
+        KeyLimitRuntime.ResetAll();
     }
 }

@@ -79,20 +79,25 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>strings.resx</DependentUpon>
     </Compile>
-    <Compile Include="Src\Features\KeyCounter\KeyCounterFeature.cs" />
-    <Compile Include="Src\Features\KeyLimit\KeyLimitRuntime.cs" />
-    <Compile Include="Src\Features\KeyLimit\Patches\GameplayPatches.cs" />
-    <Compile Include="Src\Features\Localization\LocalizationFeature.cs" />
-    <Compile Include="Src\Features\Types\KeyLimitExceededAction.cs" />
-    <Compile Include="Src\Features\Settings\ModSettings.cs" />
-    <Compile Include="Src\Features\Settings\ModSettingsFeature.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Src\Display\DisplayController.cs" />
+    <Compile Include="Src\KeyLimit\KeyLimitExceededAction.cs" />
+    <Compile Include="Src\KeyLimit\KeyLimitRuntime.cs" />
+    <Compile Include="Src\KeyLimit\KeyState.cs" />
+    <Compile Include="Src\KeyLimit\Patches\GameplayPatches.cs" />
+    <Compile Include="Src\Localization\Localizer.cs" />
+    <Compile Include="Src\Settings\ModSettings.cs" />
+    <Compile Include="Src\Settings\ModSettingsController.cs" />
     <Compile Include="Src\Main.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Localization\strings.ko.resx" />
     <EmbeddedResource Include="Localization\strings.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>strings.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Localization\strings.ko.resx">
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Package\Info.json" />
     <None Include="Package\icon.png" />
@@ -101,7 +106,6 @@
     <None Include="Repository.json" />
     <None Include="build.ps1" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="ValidateGameDirectory" BeforeTargets="ResolveAssemblyReferences">
     <Error Condition="!Exists('$(GameManagedDirectory)\Assembly-CSharp.dll')" Text="Game assembly not found. Set GameDirectory to your A Dance of Fire and Ice installation." />

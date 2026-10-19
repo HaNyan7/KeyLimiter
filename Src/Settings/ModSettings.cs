@@ -1,6 +1,7 @@
+using KeyLimiter.KeyLimit;
 using UnityModManagerNet;
 
-namespace KeyLimiter.Features.Settings;
+namespace KeyLimiter.Settings;
 
 public sealed class ModSettings : UnityModManager.ModSettings
 {

@@ -1,15 +1,15 @@
 using System.Globalization;
 using System.Resources;
 
-namespace KeyLimiter.Features.Localization;
+namespace KeyLimiter.Localization;
 
-internal static class LocalizationFeature
+internal static class Localizer
 {
     private static readonly ResourceManager Resources =
-        global::KeyLimiter.Localization.strings.ResourceManager;
+        strings.ResourceManager;
 
     internal static string Get(
-        string name,
+        string key,
         params object[] arguments
     )
     {
@@ -19,8 +19,8 @@ internal static class LocalizationFeature
             _ => CultureInfo.GetCultureInfo("en")
         };
 
-        var value = Resources.GetString(name, culture)
-            ?? name;
+        var value = Resources.GetString(key, culture)
+            ?? key;
 
         return arguments.Length == 0
             ? value

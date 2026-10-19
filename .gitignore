@@ -1,25 +1,30 @@
 # Visual Studio / MSBuild
-.vs/
-[Bb]in/
-[Oo]bj/
+/.vs/
+/[Bb]in/
+/[Oo]bj/
+/[Dd]ebug/
+/[Rr]elease/
+/x64/
+/x86/
+*.csproj.user
 *.user
 *.suo
 *.userosscache
 *.sln.docstates
 
 # JetBrains IDEs
-.idea/
+/.idea/
+/_ReSharper*/
 *.DotSettings.user
 
-# Python
-__pycache__/
-*.py[cod]
-.venv/
-venv/
+# Test and diagnostic output
+/TestResults/
+*.log
 
-# Generated images and packages
-/decorations/build/
+# Generated release packages
 /dist/
 
-# Local backups
+# Local backups and temporary files
 /backup/
+*.bak
+*.tmp

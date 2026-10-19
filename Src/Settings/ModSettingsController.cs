@@ -1,11 +1,12 @@
-using KeyLimiter.Features.Localization;
+using KeyLimiter.KeyLimit;
+using KeyLimiter.Localization;
 using UnityEngine;
 using UnityModManagerNet;
 using Strings = KeyLimiter.Localization.strings;
 
-namespace KeyLimiter.Features.Settings;
+namespace KeyLimiter.Settings;
 
-internal static class ModSettingsFeature
+internal static class ModSettingsController
 {
     private static string availableKeysInput = string.Empty;
 
@@ -19,11 +20,14 @@ internal static class ModSettingsFeature
         availableKeysInput = Settings.AvailableKeys.ToString();
     }
 
-    internal static void Draw()
+    internal static bool Draw()
     {
+        var previousEnable = Settings.Enable;
+        var previousAvailableKeys = Settings.AvailableKeys;
+
         Settings.Enable = GUILayout.Toggle(
             Settings.Enable,
-            LocalizationFeature.Get(nameof(Strings.SettingsEnable))
+            Localizer.Get(nameof(Strings.SettingsEnable))
         );
 
         if (Settings.Enable)
@@ -36,7 +40,7 @@ internal static class ModSettingsFeature
             GUILayout.BeginHorizontal();
 
             GUILayout.Label(
-                $"{LocalizationFeature.Get(nameof(Strings.SettingsAvailableKeys))}: ",
+                $"{Localizer.Get(nameof(Strings.SettingsAvailableKeys))}: ",
                 GUILayout.ExpandWidth(false)
             );
 
@@ -82,7 +86,7 @@ internal static class ModSettingsFeature
             GUILayout.BeginHorizontal();
 
             GUILayout.Label(
-                LocalizationFeature.Get(nameof(Strings.SettingsExceededAction)),
+                Localizer.Get(nameof(Strings.SettingsExceededAction)),
                 GUILayout.ExpandWidth(false)
             );
 
@@ -90,8 +94,8 @@ internal static class ModSettingsFeature
                 (KeyLimitExceededAction)GUILayout.Toolbar(
                     (int)Settings.ExceededAction,
                     [
-                        LocalizationFeature.Get(nameof(Strings.ExceededActionDie)),
-                        LocalizationFeature.Get(nameof(Strings.ExceededActionIgnore))
+                        Localizer.Get(nameof(Strings.ExceededActionDie)),
+                        Localizer.Get(nameof(Strings.ExceededActionIgnore))
                     ],
                     GUILayout.ExpandWidth(false)
                 );
@@ -104,6 +108,9 @@ internal static class ModSettingsFeature
 
             GUILayout.Space(12f);
         }
+
+        return previousEnable != Settings.Enable
+            || previousAvailableKeys != Settings.AvailableKeys;
     }
 
     internal static void Save(UnityModManager.ModEntry modEntry)
