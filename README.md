@@ -1,16 +1,15 @@
 <div align="center">
+  <img src="./Docs/Assets/logo.svg" width="100px" alt="Logo"/>
   <h1 style="font-size: 28px; margin: 10px 0;">ADOFAI KeyLimiter</h1>
   <p>Try limiting the number of keys you can use in a level!<br>레벨에서 사용 가능한 키의 갯수를 제한해보세요!</p>
 </div>
 
 <p align="center">
-  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/HaNyan7/KeyLimiter">
-  <img alt="AI Assisted" src="https://img.shields.io/badge/AI-Minor Assisted-blue">
-  <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/HaNyan7/KeyLimiter/total">
-  <img alt="GitHub License" src="https://img.shields.io/github/license/HaNyan7/KeyLimiter">
-  <a href="https://scorecard.dev/viewer/?uri=github.com/HaNyan7/KeyLimiter">
-    <img alt="OpenSSF Scorecard" src="https://api.securityscorecards.dev/projects/github.com/HaNyan7/KeyLimiter/badge">
-  </a>
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/HaNyan7/KeyLimiter" />
+  <img alt="AI Assisted" src="https://img.shields.io/badge/AI-Minor Assisted-blue" />
+  <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/HaNyan7/KeyLimiter/total" />
+  <img alt="GitHub License" src="https://img.shields.io/github/license/HaNyan7/KeyLimiter" />
+  <img alt="OpenSSF Scorecard" src="https://api.securityscorecards.dev/projects/github.com/HaNyan7/KeyLimiter/badge" />
 </p>
 
 > [!WARNING]
