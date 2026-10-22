@@ -7,7 +7,7 @@
   <img alt="AI Assisted" src="https://img.shields.io/badge/AI-Minor Assisted-blue">
   <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/HaNyan7/KeyLimiter/total">
   <img alt="GitHub License" src="https://img.shields.io/github/license/HaNyan7/KeyLimiter">
-  <img alt="OpenSSF Scorecard" src="https://api.securityscorecards.dev/projects/github.com/HaNyan7/KeyLimiter/badge" />
+  <img alt="OpenSSF Scorecard" src="https://api.securityscorecards.dev/projects/github.com/HaNyan7/KeyLimiter/badge">
 </p>
 
 > [!WARNING]
