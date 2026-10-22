@@ -4,6 +4,7 @@
 </div>
 
 <p align="center">
+  <img alt="GitHub Release" src="https://img.shields.io/github/v/release/HaNyan7/KeyLimiter">
   <img alt="AI Assisted" src="https://img.shields.io/badge/AI-Minor Assisted-blue">
   <img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/HaNyan7/KeyLimiter/total">
   <img alt="GitHub License" src="https://img.shields.io/github/license/HaNyan7/KeyLimiter">
