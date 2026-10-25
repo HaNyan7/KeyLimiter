@@ -16,6 +16,7 @@
 
 > [!IMPORTANT]
 > This mod does not support configuration within the editor. Please refer to the relevant documentation for more details.
+> 
 > 이 모드는 에디터 내부 설정을 지원하지 않습니다. 자세한건 관련 문서를 확인해주세요.
 
 > [!WARNING]
