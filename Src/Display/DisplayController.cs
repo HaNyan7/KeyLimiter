@@ -7,6 +7,9 @@ namespace KeyLimiter.Display;
 // TODO: 폰트 수정, 코드 최적화
 internal static class DisplayController
 {
+    private static Font interFont;
+    internal static Font InterFont => interFont;
+
     private static GameObject display;
     private static bool playing;
 
@@ -33,6 +36,25 @@ internal static class DisplayController
 
     internal static void Play()
     {
+        if (interFont == null)
+        {
+            foreach (var font in Resources.FindObjectsOfTypeAll<Font>())
+            {
+                if (font != null && font.name == "Inter-Light")
+                {
+                    interFont = font;
+                    break;
+                }
+            }
+
+            if (interFont == null)
+            {
+                Debug.LogWarning(
+                    "[KeyLimiter] Inter-Light font was not found."
+                );
+            }
+        }
+
         playing = true;
     }
 
@@ -66,6 +88,7 @@ internal sealed class DisplayBehaviour : MonoBehaviour
         textStyle ??= new GUIStyle(GUI.skin.label)
         {
             fontSize = 24,
+            fontStyle = FontStyle.Normal,
             alignment = TextAnchor.MiddleCenter,
             richText = true,
             normal = new GUIStyleState
@@ -74,30 +97,63 @@ internal sealed class DisplayBehaviour : MonoBehaviour
             }
         };
 
-        var text = $"KeyLimiter {KeyLimitRuntime.AvailableKeys}";
+        textStyle.font = DisplayController.InterFont ?? GUI.skin.font;
 
-        textStyle.normal.textColor = new Color(0f, 0f, 0f, 0.55f);
+        var text = $"KeyLimit {KeyLimitRuntime.AvailableKeys}";
 
-        GUI.Label(
-            new Rect(
-                2f,
-                Screen.height * 0.75f - 18f,
-                Screen.width,
-                40f
-            ),
-            text,
-            textStyle
+        // 그림자
+        var textRect = new Rect(
+            0f,
+            Screen.height * 0.75f - 20f,
+            Screen.width,
+            40f
         );
+
+        const int shadowRadius = 4;
+        const float shadowOffsetX = 1f;
+        const float shadowOffsetY = 2f;
+        const float shadowSigma = 2f;
+
+        if (Event.current.type == EventType.Repaint)
+        {
+            for (var x = -shadowRadius; x <= shadowRadius; x++)
+            {
+                for (var y = -shadowRadius; y <= shadowRadius; y++)
+                {
+                    var distanceSquared = x * x + y * y;
+
+                    if (distanceSquared == 0
+                        || distanceSquared > shadowRadius * shadowRadius)
+                    {
+                        continue;
+                    }
+
+                    var alpha = Mathf.Exp(
+                        -distanceSquared
+                        / (2f * shadowSigma * shadowSigma)
+                    ) * 0.09f;
+
+                    textStyle.normal.textColor =
+                        new Color(0f, 0f, 0f, alpha);
+
+                    GUI.Label(
+                        new Rect(
+                            textRect.x + shadowOffsetX + x,
+                            textRect.y + shadowOffsetY + y,
+                            textRect.width,
+                            textRect.height
+                        ),
+                        text,
+                        textStyle
+                    );
+                }
+            }
+        }
 
         textStyle.normal.textColor = Color.white;
 
         GUI.Label(
-            new Rect(
-                0f,
-                Screen.height * 0.75f - 20f,
-                Screen.width,
-                40f
-            ),
+            textRect,
             text,
             textStyle
         );
