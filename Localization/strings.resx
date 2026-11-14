@@ -132,9 +132,6 @@
   <data name="ExceededActionIgnore" xml:space="preserve">
     <value>Ignore Input</value>
   </data>
-  <data name="ModDisplay" xml:space="preserve">
-    <value>Remaining Keys {0}</value>
-  </data>
   <data name="ModGameOver" xml:space="preserve">
     <value>Key Limit Exceeded</value>
   </data>

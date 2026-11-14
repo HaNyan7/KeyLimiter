@@ -83,7 +83,6 @@
     <Compile Include="Src\Display\DisplayController.cs" />
     <Compile Include="Src\KeyLimit\KeyLimitExceededAction.cs" />
     <Compile Include="Src\KeyLimit\KeyLimitRuntime.cs" />
-    <Compile Include="Src\KeyLimit\KeyState.cs" />
     <Compile Include="Src\KeyLimit\Patches\GameplayPatches.cs" />
     <Compile Include="Src\Localization\Localizer.cs" />
     <Compile Include="Src\Settings\ModSettings.cs" />

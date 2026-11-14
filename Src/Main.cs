@@ -7,6 +7,7 @@ using UnityModManagerNet;
 
 namespace KeyLimiter;
 
+// TODO: 코드 최적화
 public static class Main
 {
     private static Harmony harmony;
@@ -34,10 +35,6 @@ public static class Main
             harmony.PatchAll(Assembly.GetExecutingAssembly());
             KeyLimitRuntime.ResetAll();
             DisplayController.Create();
-            DisplayController.SetVisible(
-                ModSettingsController.Settings.Enable
-                && scnGame.instance != null
-            );
         }
         else
         {
@@ -55,10 +52,6 @@ public static class Main
             return;
 
         KeyLimitRuntime.ResetAll();
-        DisplayController.SetVisible(
-            ModSettingsController.Settings.Enable
-            && scnGame.instance != null
-        );
     }
 
     private static void OnSaveGUI(UnityModManager.ModEntry modEntry)

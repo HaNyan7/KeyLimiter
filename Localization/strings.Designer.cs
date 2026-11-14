@@ -79,15 +79,6 @@ namespace KeyLimiter.Localization {
         }
         
         /// <summary>
-        ///   Remaining Keys {0}과(와) 유사한 지역화된 문자열을 찾습니다.
-        /// </summary>
-        internal static string ModDisplay {
-            get {
-                return ResourceManager.GetString("ModDisplay", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Key Limit Exceeded과(와) 유사한 지역화된 문자열을 찾습니다.
         /// </summary>
         internal static string ModGameOver {

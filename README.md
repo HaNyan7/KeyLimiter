@@ -19,13 +19,18 @@
 > 
 > 이 모드는 에디터 내부 설정을 지원하지 않습니다. 자세한건 관련 문서를 확인해주세요.
 
-> [!WARNING]
-> 이 모드는 현재 정식 출시 예정인 모드입니다. 사용 시 발생하는 문제의 책임은 본인에게 있습니다. 
+> [!NOTE]
+> This mod does not support MelonLoader.
+>
+> 이 모드는 MelonLoader를 지원하지 않습니다.
 
 # Quick start
-추가예정
 
-## 라이선스
+Please install the mod by following the [Mod Installation Guide](https://hyonsu.notion.site/adofai-mod-guide).
+
+[모드 설치 가이드](https://hyonsu.notion.site/adofai-mod-guide)에 따라 모드를 설치해주세요.
+
+# License
 
 Copyright 2026 HaNyan.
 

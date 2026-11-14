@@ -17,6 +17,11 @@ internal static class ModSettingsController
         Settings = UnityModManager.ModSettings.Load<ModSettings>(modEntry)
             ?? new ModSettings();
 
+        Settings.AvailableKeys = Mathf.Clamp(
+            Settings.AvailableKeys,
+            1,
+            40
+        );
         availableKeysInput = Settings.AvailableKeys.ToString();
     }
 

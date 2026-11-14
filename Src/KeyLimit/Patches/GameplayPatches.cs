@@ -1,6 +1,5 @@
 using HarmonyLib;
 using KeyLimiter.Display;
-using KeyLimiter.Settings;
 
 namespace KeyLimiter.KeyLimit.Patches;
 
@@ -12,7 +11,7 @@ internal static class EnforceKeyLimitPatch
 {
     private static void Prefix(scrPlayer __instance)
     {
-        KeyLimitRuntime.PrepareInput(__instance);
+        KeyLimitRuntime.PrefixInput(__instance);
     }
 
     private static void Postfix(
@@ -20,7 +19,7 @@ internal static class EnforceKeyLimitPatch
         ref int __result
     )
     {
-        if (!KeyLimitRuntime.CompleteInput(__instance))
+        if (!KeyLimitRuntime.PostfixInput(__instance))
             __result = 0;
     }
 }
@@ -43,23 +42,31 @@ internal static class ResetKeyLimitOnRewindPatch
     }
 }
 
-[HarmonyPatch(typeof(scnGame), "Awake")]
-internal static class ShowDisplayOnGameStartPatch
-{
-    private static void Postfix()
-    {
-        DisplayController.SetVisible(
-            ModSettingsController.Settings.Enable
-        );
-    }
-}
-
 [HarmonyPatch(typeof(scnGame), "OnDestroy")]
-internal static class HideDisplayOnGameEndPatch
+internal static class ResetKeyLimitOnGameEndPatch
 {
     private static void Prefix()
     {
-        DisplayController.SetVisible(false);
+        DisplayController.Stop();
         KeyLimitRuntime.ResetAll();
+    }
+}
+
+[HarmonyPatch(typeof(scnGame), nameof(scnGame.Play))]
+internal static class ShowDisplayOnPlayPatch
+{
+    private static void Postfix(bool __result)
+    {
+        if (__result)
+            DisplayController.Play();
+    }
+}
+
+[HarmonyPatch(typeof(scnEditor), nameof(scnEditor.SwitchToEditMode))]
+internal static class HideDisplayOnEditPatch
+{
+    private static void Prefix()
+    {
+        DisplayController.Stop();
     }
 }

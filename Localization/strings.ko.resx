@@ -132,10 +132,7 @@
   <data name="ExceededActionIgnore" xml:space="preserve">
     <value>입력 무시</value>
   </data>
-  <data name="ModDisplay" xml:space="preserve">
-    <value>남은 키 {0}</value>
-  </data>
   <data name="ModGameOver" xml:space="preserve">
-    <value>키 제한을 초과했습니다.</value>
+    <value>키 제한을 초과했습니다</value>
   </data>
 </root>
